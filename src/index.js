@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { routerList } from './router/index';
 import reportWebVitals from './reportWebVitals';
+import { HashRouter } from 'react-router-dom'
+import { renderRoutes } from 'react-router-config'
+import 'antd/dist/antd.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <HashRouter>
+    {renderRoutes(routerList)}
+  </HashRouter>,
   document.getElementById('root')
 );
 
