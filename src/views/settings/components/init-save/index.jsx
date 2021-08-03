@@ -1,6 +1,6 @@
 import react, { Component } from 'react'
 import { Form, Input, Select, InputNumber, Radio, Button } from 'antd'
-let dialog = require('electron');
+import { ipcRenderer } from 'electron'
 
 export default class InitSave extends Component {
 
@@ -14,8 +14,6 @@ export default class InitSave extends Component {
     gameStyles: 'survival',
     pvp: false,
     playerNum: 6,
-    serverPath: '',
-    savePath: ''
   }
 
 
@@ -39,11 +37,10 @@ export default class InitSave extends Component {
   }
 
   getPathDialog = () => {
-    console.log(dialog)
-    // dialog.showOpenDialogSync({
-    //   title: '请选择文件夹',
-    //   properties: ['openDirectory']
-    // })
+    console.log(123)
+    ipcRenderer.invoke('getDirPath').then(res => {
+
+    })
   }
 
   render() {
@@ -61,12 +58,12 @@ export default class InitSave extends Component {
 
     return (
       <Form ref={this.formRef} {...layout} initialValues={{ name, description, password, serverStyles, gameStyles, pvp, playerNum, serverPath, savePath }}>
-        <Form.Item label="存档目录" name="savePath">
+        {/* <Form.Item label="存档目录" name="savePath">
           <Input onFocus={this.saveFocus} placeholder="请选择" allowClear />
         </Form.Item>
         <Form.Item label="服务端目录" name="serverPath">
           <Input onFocus={this.serverFocus} placeholder="请选择" allowClear />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           rules={[{ required: true, message: "必填项" }]}
           label="房间名称"

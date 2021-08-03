@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+require('./electron-ipc/dialog')
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -6,6 +7,7 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     }
   })
 
@@ -15,7 +17,6 @@ function createWindow() {
     win.loadURL('http://localhost:3000/')
     win.webContents.openDevTools()
   }
-
 }
 
 app.whenReady().then(() => {
@@ -28,3 +29,4 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 })
+
