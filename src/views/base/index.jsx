@@ -13,6 +13,7 @@ export default class Base extends Component {
   state = {
     savePath: '',
     serverPath: '',
+    clientPath: ''
   }
 
   savePathAction = () => {
@@ -21,6 +22,10 @@ export default class Base extends Component {
 
   serverPathAction = () => {
     this.getDirPath('server')
+  }
+
+  clientPathAction = () => {
+    this.getDirPath('client')
   }
 
   getDirPath = (type) => {
@@ -39,9 +44,10 @@ export default class Base extends Component {
     let res = JSON.parse(fs.readFileSync(targetPath, { encoding: 'utf8' }))
     res.savePath = this.state.savePath
     res.serverPath = this.state.serverPath
+    res.clientPath = this.state.clientPath
     fs.writeFileSync(targetPath, JSON.stringify(res))
     message.success('操作成功')
-    this.props.history.push('/settings')
+    this.props.history.push({ pathname: '/settings', state: 'settings' })
   }
 
   saveClear = (e) => {
@@ -56,6 +62,12 @@ export default class Base extends Component {
     })
   }
 
+  clientClear = (e) => {
+    this.setState({
+      clientPath: e.target.value
+    })
+  }
+
   componentDidMount = () => {
     fs.readFile(targetPath, { encoding: 'utf8' }, (err, data) => {
       if (err) {
@@ -65,26 +77,33 @@ export default class Base extends Component {
       let res = JSON.parse(data)
       this.setState({
         savePath: res.savePath,
-        serverPath: res.serverPath
+        serverPath: res.serverPath,
+        clientPath: res.clientPath,
       })
     })
   }
 
   render() {
-    let { serverPath, savePath } = this.state
+    let { serverPath, savePath, clientPath } = this.state
     return (
       <div className="base">
         <div className="base_row">
           <Tooltip placement="top" title={'存档目录不要带中文'}>
             <Button onClick={this.savePathAction} className="base_btn" type="primary">存档目录</Button>
           </Tooltip>
-          <Input className='base_input' value={savePath} placeholder="请输入" allowClear onChange={this.saveClear} />
+          <Input className='base_input' value={savePath} placeholder="请输入" readOnly allowClear onChange={this.saveClear} />
+        </div>
+        <div className="base_row">
+          <Tooltip placement="top" title={`Don't Starve Together 安装目录`}>
+            <Button onClick={this.clientPathAction} className="base_btn" type="primary">客户端目录</Button>
+          </Tooltip>
+          <Input className='base_input' value={clientPath} placeholder="请输入" readOnly allowClear onChange={this.clientClear} />
         </div>
         <div className="base_row">
           <Tooltip placement="top" title={`Don't Starve Together Dedicated Server 安装目录`}>
             <Button onClick={this.serverPathAction} className="base_btn" type="primary">服务端目录</Button>
           </Tooltip>
-          <Input className='base_input' value={serverPath} placeholder="请输入" allowClear onChange={this.serverClear} />
+          <Input className='base_input' value={serverPath} placeholder="请输入" readOnly allowClear onChange={this.serverClear} />
         </div>
         <div className="base_row">
           <Button onClick={this.save} type="primary">完成</Button>
